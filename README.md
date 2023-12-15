@@ -120,5 +120,121 @@ public class GeometryChatbot {
 
 
 
+TYPESCRIPT
+
+class Shape {
+  type: string;
+  id: string;
+
+  constructor(type: string, id: string) {
+    this.type = type;
+    this.id = id;
+  }
+
+  area(): number | string {
+    return "error";
+  }
+}
+
+class Rectangle extends Shape {
+  width: number;
+  height: number;
+
+  constructor(id: string, width: number, height: number) {
+    super("rectangle", id);
+    this.width = width;
+    this.height = height;
+  }
+
+  area(): number {
+    return Math.floor(this.width * this.height);
+  }
+}
+
+class Triangle extends Shape {
+  base: number;
+  height: number;
+
+  constructor(id: string, base: number, height: number) {
+    super("triangle", id);
+    this.base = base;
+    this.height = height;
+  }
+
+  area(): number {
+    return Math.floor((this.base * this.height) / 2);
+  }
+}
+
+class GeometryChatbot {
+  shapes: { [id: string]: Shape } = {};
+
+  executeCommand(command: string): string {
+    const args = command.split(" ");
+    const action = args[0];
+
+    switch (action) {
+      case "add":
+        return this.addShape(args);
+      case "area":
+        return this.calculateArea(args[1]);
+      default:
+        return "error";
+    }
+  }
+
+  addShape(args: string[]): string {
+    const shapeType = args[1];
+    const id = args[2];
+
+    if (this.shapes[id]) {
+      return "error";
+    }
+
+    switch (shapeType) {
+      case "rectangle":
+        this.shapes[id] = new Rectangle(id, parseInt(args[3]), parseInt(args[4]));
+        break;
+      case "triangle":
+        this.shapes[id] = new Triangle(id, parseInt(args[3]), parseInt(args[4]));
+        break;
+      default:
+        return "error";
+    }
+
+    return "";
+  }
+
+  calculateArea(id: string): string {
+    const shape = this.shapes[id];
+    if (shape) {
+      return shape.area().toString();
+    } else {
+      return "error";
+    }
+  }
+}
+
+function geometryChat(commands: string[]): string {
+  const chatbot = new GeometryChatbot();
+  const output: string[] = [];
+
+  for (const command of commands) {
+    const result = chatbot.executeCommand(command);
+    if (result !== "") {
+      output.push(result);
+    }
+  }
+
+  return output.join(",");
+}
+
+// Example usage:
+const commands = ["add triangle t1 4 5", "area t1", "add rectangle r1 3 3", "area r1"];
+const result = geometryChat(commands);
+console.log(result); // Output: "10,9"
+
+
+
 
 
